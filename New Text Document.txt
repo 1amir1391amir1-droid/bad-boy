@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>ماشین حساب شکل</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #1a1a2e;
+    color: white;
+    padding: 30px;
+}
+h1 {
+    color: #ff00ff;
+}
+select, input, button {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+button {
+    background-color: #ff00ff;
+    color: white;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #ff66ff;
+}
+canvas {
+    margin-top: 20px;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+#footer {
+    margin-top: 30px;
+    color: #ff00ff;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<h1>ماشین حساب شکل</h1>
+
+<label>انتخاب شکل:</label>
+<select id="shape" onchange="updateInputs()">
+    <option value="square">مربع</option>
+    <option value="rectangle">مستطیل</option>
+    <option value="triangle">مثلث</option>
+</select>
+
+<div id="inputs"></div>
+<button onclick="calculate()">محاسبه</button>
+
+<canvas id="canvas" width="300" height="300"></canvas>
+<div id="result"></div>
+<div id="footer">سازندگان: گروه BAD BOY</div>
+
+<script>
+const inputsDiv = document.getElementById('inputs');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let selectedShape = 'square';
+
+function updateInputs() {
+    selectedShape = document.getElementById('shape').value;
+    if(selectedShape === 'square') {
+        inputsDiv.innerHTML = `<input id="a" type="number" placeholder="طول ضلع">`;
+    } else if(selectedShape === 'rectangle') {
+        inputsDiv.innerHTML = `<input id="a" type="number" placeholder="طول">
+                               <input id="b" type="number" placeholder="عرض">`;
+    } else if(selectedShape === 'triangle') {
+        inputsDiv.innerHTML = `<input id="a" type="number" placeholder="قاعده">
+                               <input id="h" type="number" placeholder="ارتفاع">`;
+    }
+}
+
+function calculate() {
+    const a = parseFloat(document.getElementById('a').value);
+    let resultText = '';
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(selectedShape === 'square') {
+        const area = a*a;
+        const perimeter = 4*a;
+        resultText = `مساحت = ${area} | محیط = ${perimeter}`;
+        drawSquare(a);
+    } else if(selectedShape === 'rectangle') {
+        const b = parseFloat(document.getElementById('b').value);
+        const area = a*b;
+        const perimeter = 2*(a+b);
+        resultText = `مساحت = ${area} | محیط = ${perimeter}`;
+        drawRectangle(a,b);
+    } else if(selectedShape === 'triangle') {
+        const h = parseFloat(document.getElementById('h').value);
+        const area = 0.5*a*h;
+        resultText = `مساحت = ${area}`;
+        drawTriangle(a,h);
+    }
+
+    document.getElementById('result').innerText = resultText;
+}
+
+function drawSquare(size) {
+    ctx.fillStyle = '#ff00ff';
+    ctx.fillRect(50,50,size*2,size*2);
+}
+
+function drawRectangle(width,height) {
+    ctx.fillStyle = '#00ffff';
+    ctx.fillRect(50,50,width*2,height*2);
+}
+
+function drawTriangle(base,height) {
+    ctx.fillStyle = '#ffff00';
+    ctx.beginPath();
+    ctx.moveTo(50,50+height*2);
+    ctx.lineTo(50+base*2,50+height*2);
+    ctx.lineTo(50+base,50);
+    ctx.closePath();
+    ctx.fill();
+}
+
+updateInputs();
+</script>
+
+</body>
+</html>
